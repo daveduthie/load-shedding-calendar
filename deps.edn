@@ -1,0 +1,20 @@
+{:paths ["src" "resources"]
+ :deps  {
+         enlive/enlive            {:mvn/version "1.1.6"}
+         integrant/integrant      {:mvn/version "0.8.0"}
+         metosin/reitit           {:mvn/version "0.6.0" }
+         org.clojure/clojure      {:mvn/version "1.11.1"}
+         org.clojure/core.memoize {:mvn/version "1.0.257"}
+         ring/ring-core           {:mvn/version "1.9.6" }
+         ring/ring-jetty-adapter  {:mvn/version "1.9.6"}
+         }
+ :aliases
+ {:build {:deps       {io.github.clojure/tools.build
+                       {:git/tag "v0.9.4" :git/sha "76b78fe"}}
+          :ns-default build}
+  :dev   {:extra-deps  {integrant/repl {:mvn/version "0.3.2" }}
+          :extra-paths ["dev"]}
+  :test  {:extra-paths ["test"]
+          :extra-deps  {org.clojure/test.check {:mvn/version "1.1.1"}
+                        io.github.cognitect-labs/test-runner
+                        {:git/tag "v0.5.1" :git/sha "dfb30dd"}}}}}

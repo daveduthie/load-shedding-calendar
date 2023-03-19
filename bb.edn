@@ -1,0 +1,2 @@
+{:tasks
+ {uberjar (clojure "-T:build ci")}}
