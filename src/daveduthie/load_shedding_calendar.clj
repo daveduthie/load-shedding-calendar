@@ -1,5 +1,6 @@
 (ns daveduthie.load-shedding-calendar
-  (:require [daveduthie.load-shedding-calendar.ical :as ical]
+  (:require [clojure.java.io :as io]
+            [daveduthie.load-shedding-calendar.ical :as ical]
             [daveduthie.load-shedding-calendar.schedule :as schedule]
             [daveduthie.load-shedding-calendar.scrape :as scrape]
             [integrant.core :as ig]
@@ -49,6 +50,22 @@
   (jetty/run-jetty #(app %) {:port port, :join? false}))
 
 (defmethod ig/halt-key! ::http-server [_ srv] (.stop srv))
+
+(defn system
+  []
+  (-> (io/resource "daveduthie/load-shedding-calendar/config.edn")
+      slurp
+      ig/read-string
+      :system))
+
+(defn -main
+  [& _args]
+  (try (let [system_ (system)]
+         (ig/load-namespaces system_)
+         (-> system_
+             ig/prep
+             ig/init))
+       (catch Throwable t (prn t (.getMessage t)) (System/exit 1))))
 
 (comment
   (user/system)
