@@ -34,10 +34,17 @@
   (when-let [[_ stage _start-end start end] (re-matches load-shed-line-re line)]
     {:stage stage, :start start, :end end, :raw/line line}))
 
+(defn- end-time
+  [end]
+  (if (or (nil? end) ; omitted if whole day
+          (= "24:00" end)) ; 24:00 doesn't parse
+    "00:00" ; map to start of next day
+    end))
+
 (defn parse-times
   [date {:as interval, :keys [start end]}]
   (let [start-time (LocalTime/parse (or start "00:00"))
-        end-time (LocalTime/parse (or end "23:59"))]
+        end-time (LocalTime/parse (end-time end))]
     (-> interval
         (assoc :date (parse-date date))
         (update :stage #(Integer/parseInt %))
